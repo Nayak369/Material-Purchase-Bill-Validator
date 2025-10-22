@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPBV-Bot | AI-Powered Bill Validator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Guidelines Toggle & Panel -->
+    <div class="guidelines-toggle" id="guidelinesToggle">
+        <i class="fas fa-info"></i>
+    </div>
+
+    <div class="guidelines-panel" id="guidelinesPanel">
+        <button class="close-panel" id="closePanel">
+            <i class="fas fa-times"></i>
+        </button>
+        <h2><i class="fas fa-info-circle"></i> Validation Guidelines</h2>
+        
+        <h3>Bill Content Requirements</h3>
+        <div class="policy-info">
+            <div class="policy-item">Supplier Name (must match approved vendor list)</div>
+            <div class="policy-item">Valid GSTIN (15-digit alphanumeric format)</div>
+            <div class="policy-item">Bill Date (within last 60 days)</div>
+            <div class="policy-item">Total Amount (numeric, positive)</div>
+            <div class="policy-item">PO Number (if applicable)</div>
+            <div class="policy-item">GST Bill mention or GST breakdown (CGST/SGST/IGST)</div>
+            <div class="policy-item">No Performa Invoice allowed</div>
+            <div class="policy-item">Must be in Company Name (not personal name)</div>
+        </div>
+
+        <h3>Approval Matrix</h3>
+        <div class="policy-info">
+            <div class="policy-item"><strong>Up to ₹10,000:</strong> BU Head OR Segment/Zonal Head</div>
+            <div class="policy-item"><strong>₹10,001 - ₹20,000:</strong> BU Head + Finance Head</div>
+            <div class="policy-item"><strong>Above ₹20,000:</strong> BU Head + Finance Head + K K Sir</div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker">1</div>
+                <div class="timeline-content">
+                    <strong>Up to ₹10,000</strong>
+                    <p>BU Head OR Segment/Zonal Head approval required</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-marker">2</div>
+                <div class="timeline-content">
+                    <strong>₹10,001 - ₹20,000</strong>
+                    <p>BU Head + Finance Head approval required</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-marker">3</div>
+                <div class="timeline-content">
+                    <strong>Above ₹20,000</strong>
+                    <p>BU Head + Finance Head + K K Sir approval required</p>
+                </div>
+            </div>
+        </div>
+
+        <h3>Non-GST Bills</h3>
+        <div class="policy-info">
+            <p>Non-GST bills are purchase invoices that <strong>do not contain a GSTIN</strong> or <strong>lack GST breakdown</strong>.</p>
+            <p style="margin: 15px 0; padding: 12px; background: rgba(255, 209, 102, 0.2); border-radius: 10px;">
+                These bills are <strong>NOT marked invalid</strong> but flagged for <strong>Manual Verification</strong>.
+            </p>
+            <div class="policy-item">Supplier Name: Flag for Manual Verification if missing</div>
+            <div class="policy-item">Bill Date: Flag for Manual Verification if older than 60 days</div>
+            <div class="policy-item">Total Amount: Flag for Manual Verification if invalid</div>
+            <div class="policy-item">Company Name: Flag for Manual Verification if incorrect</div>
+            <div class="policy-item">Prohibited Terms: Reject if "Performa" or "Estimate" found</div>
+        </div>
+
+        <h3>Policy Compliance</h3>
+        <div class="policy-info">
+            <div class="policy-item">No duplicate bills allowed</div>
+            <div class="policy-item">All bills must be raised in ERP within 30 days</div>
+            <div class="policy-item">Avoid cash payment (flag if "Cash" mentioned without UPI justification)</div>
+            <div class="policy-item">For fuel expenses: must mention KM travelled</div>
+            <div class="policy-item">Company assets must be purchased in company name</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-robot"></i>
+            </div>
+            <h1>MPBV-Bot</h1>
+            <p>AI-Powered Material Purchase Bill Validator</p>
+            <p>Advanced OCR validation with Gemini AI</p>
+        </header>
+
+        <div class="main-content">
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-file-upload"></i> Upload Bill</h2>
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-file-invoice-dollar"></i>
+                    <h3>Drag & Drop your bill here</h3>
+                    <p>or click to browse files</p>
+                    <p>Supported formats: PDF, JPG, PNG</p>
+                </div>
+                <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+                
+                <div class="file-info" id="fileInfo">
+                    <h4>Selected File:</h4>
+                    <p id="fileName"></p>
+                    <p id="fileSize"></p>
+                    <div class="progress-bar">
+                        <div class="progress" id="uploadProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="ai-processing" id="aiProcessing">
+                    <i class="fas fa-brain"></i>
+                    <h3>AI Processing</h3>
+                    <p>Gemini AI is extracting data from your bill...</p>
+                    
+                    <div class="processing-steps">
+                        <div class="processing-step" id="step1">
+                            <i class="fas fa-file-import"></i>
+                            <p>Reading Document</p>
+                        </div>
+                        <div class="processing-step" id="step2">
+                            <i class="fas fa-search"></i>
+                            <p>Analyzing Content</p>
+                        </div>
+                        <div class="processing-step" id="step3">
+                            <i class="fas fa-cogs"></i>
+                            <p>Extracting Data</p>
+                        </div>
+                        <div class="processing-step" id="step4">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Completing</p>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress shimmer" id="aiProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+                
+                <div class="extracted-data" id="extractedData">
+                    <h4><i class="fas fa-list-alt"></i> Extracted Bill Data</h4>
+                    <div id="dataContent"></div>
+                </div>
+                
+                <button class="btn btn-secondary btn-block" id="validateBtn" disabled>
+                    <i class="fas fa-check-circle"></i> Validate Bill
+                </button>
+                
+                <div class="loader" id="loader">
+                    <div class="loader-spinner"></div>
+                    <p>Validating your bill with advanced AI...</p>
+                    <div class="progress-bar">
+                        <div class="progress shimmer" id="validationProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card validation-result" id="validationResult">
+                <h2 class="card-title"><i class="fas fa-clipboard-check"></i> Validation Result</h2>
+                <div class="result-status" id="resultStatus"></div>
+                
+                <div class="result-details" id="resultDetails"></div>
+                
+                <div class="approval-info" id="approvalInfo"></div>
+                
+                <button class="btn btn-block" id="newBillBtn">
+                    <i class="fas fa-plus-circle"></i> Validate Another Bill
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>MPBV-Bot v3.0 | Advanced AI-Powered Bill Validation with Gemini AI</p>
+            <p>Made by Satyajit</p>
+        </footer>
+    </div>
+
+    <div class="notification" id="notification">
+        <i class="fas fa-check-circle"></i>
+        <div>
+            <strong>Bill uploaded successfully!</strong>
+            <p>Ready for validation</p>
+        </div>
+    </div>
+
+    <div class="floating-action" id="helpBtn">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
