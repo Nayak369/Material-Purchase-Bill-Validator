@@ -15,7 +15,8 @@
 
 The **Material Purchase Bill Validator (MPBV-Bot)** is an advanced web application that leverages **Gemini AI OCR technology** to automatically extract and validate purchase bill information. This intelligent system streamlines the bill processing workflow by providing real-time validation, automated approval routing, and comprehensive data extraction.
 
-![App Preview](https://mpbv-bot.netlify.app/)
+[🔗 Live Demo](https://mpbv-bot.netlify.app/)
+
 
 ## ✨ Key Features
 
@@ -263,10 +264,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Author
 
-**Made by Satyajit**
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/satyajit)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/satyajit)
+**Made by Team NBI**
 
 ## 🙏 Acknowledgments
 
@@ -279,8 +277,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For support, please open an issue on the GitHub repository or contact the author directly.
 
----
-
-<p align="center">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=600&size=18&pause=1000&color=2A6DFF&center=true&vCenter=true&width=400&lines=Made+with+❤️+by+Satyajit;AI-Powered+Validation+System;Streamline+Your+Bill+Processing" alt="Typing SVG" />
-</p>
