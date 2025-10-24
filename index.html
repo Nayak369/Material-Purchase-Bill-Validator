@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MPBV-Bot | AI-Powered Bill Validator</title>
+    <title>MPBV-Bot | Material Purchase Bill Validator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -92,110 +92,306 @@
     <div class="container">
         <header>
             <div class="logo">
-                <i class="fas fa-robot"></i>
+                <i class="fas fa-file-invoice-dollar"></i>
             </div>
             <h1>MPBV-Bot</h1>
-            <p>AI-Powered Material Purchase Bill Validator</p>
-            <p>Advanced OCR validation with Gemini AI</p>
+            <p>Material Purchase Bill Validator</p>
+            <p>AI-Powered Validation with Gemini AI OCR Technology</p>
         </header>
+
+        <div class="validation-steps">
+            <div class="step active" id="step-upload">
+                <div class="step-icon">
+                    <i class="fas fa-upload"></i>
+                </div>
+                <div class="step-label">Upload Bill</div>
+            </div>
+            <div class="step" id="step-process">
+                <div class="step-icon">
+                    <i class="fas fa-cogs"></i>
+                </div>
+                <div class="step-label">AI Processing</div>
+            </div>
+            <div class="step" id="step-validate">
+                <div class="step-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="step-label">Validation</div>
+            </div>
+            <div class="step" id="step-results">
+                <div class="step-icon">
+                    <i class="fas fa-clipboard-check"></i>
+                </div>
+                <div class="step-label">Results</div>
+            </div>
+        </div>
 
         <div class="main-content">
             <div class="card">
                 <h2 class="card-title"><i class="fas fa-file-upload"></i> Upload Bill</h2>
-                <div class="upload-area" id="uploadArea">
-                    <i class="fas fa-file-invoice-dollar"></i>
-                    <h3>Drag & Drop your bill here</h3>
-                    <p>or click to browse files</p>
-                    <p>Supported formats: PDF, JPG, PNG</p>
-                </div>
-                <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
                 
-                <div class="file-info" id="fileInfo">
-                    <h4>Selected File:</h4>
-                    <p id="fileName"></p>
-                    <p id="fileSize"></p>
-                    <div class="progress-bar">
-                        <div class="progress" id="uploadProgress" style="width: 0%"></div>
+                <div class="tab-nav">
+                    <div class="tab-item active" data-tab="upload">Upload Bill</div>
+                    <div class="tab-item" data-tab="extracted">Extracted Data</div>
+                    <div class="tab-item" data-tab="preview">Bill Preview</div>
+                </div>
+                
+                <div class="tab-content active" id="upload-tab">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                        <h3>Drag & Drop your bill here</h3>
+                        <p>or click to browse files</p>
+                        <p>Supported formats: PDF, JPG, PNG</p>
                     </div>
-                </div>
-                
-                <div class="ai-processing" id="aiProcessing">
-                    <i class="fas fa-brain"></i>
-                    <h3>AI Processing</h3>
-                    <p>Gemini AI is extracting data from your bill...</p>
+                    <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
                     
-                    <div class="processing-steps">
-                        <div class="processing-step" id="step1">
-                            <i class="fas fa-file-import"></i>
-                            <p>Reading Document</p>
+                    <div class="file-info" id="fileInfo">
+                        <h4>Selected File:</h4>
+                        <p id="fileName"></p>
+                        <p id="fileSize"></p>
+                        <div class="progress-bar">
+                            <div class="progress" id="uploadProgress" style="width: 0%"></div>
                         </div>
-                        <div class="processing-step" id="step2">
-                            <i class="fas fa-search"></i>
-                            <p>Analyzing Content</p>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="extracted-tab">
+                    <div class="ai-processing" id="aiProcessing">
+                        <i class="fas fa-brain"></i>
+                        <h3>AI Processing</h3>
+                        <p>Gemini AI is extracting data from your bill...</p>
+                        
+                        <div class="processing-steps">
+                            <div class="processing-step" id="step1">
+                                <i class="fas fa-file-import"></i>
+                                <p>Reading Document</p>
+                            </div>
+                            <div class="processing-step" id="step2">
+                                <i class="fas fa-search"></i>
+                                <p>Analyzing Content</p>
+                            </div>
+                            <div class="processing-step" id="step3">
+                                <i class="fas fa-cogs"></i>
+                                <p>Extracting Data</p>
+                            </div>
+                            <div class="processing-step" id="step4">
+                                <i class="fas fa-check-circle"></i>
+                                <p>Completing</p>
+                            </div>
                         </div>
-                        <div class="processing-step" id="step3">
-                            <i class="fas fa-cogs"></i>
-                            <p>Extracting Data</p>
+                        
+                        <div class="progress-bar">
+                            <div class="progress shimmer" id="aiProgress" style="width: 0%"></div>
                         </div>
-                        <div class="processing-step" id="step4">
-                            <i class="fas fa-check-circle"></i>
-                            <p>Completing</p>
+                        
+                        <button class="btn btn-secondary" id="retryBtn" style="display: none; margin-top: 20px;">
+                            <i class="fas fa-redo"></i> Retry Processing
+                        </button>
+                        
+                        <!-- Error Message Section -->
+                        <div class="error-message" id="processingError" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255, 71, 87, 0.1); border-radius: 10px; border-left: 4px solid var(--danger);">
+                            <h4><i class="fas fa-exclamation-triangle"></i> Processing Error</h4>
+                            <p id="errorMessageText">An error occurred during processing. Please try again.</p>
                         </div>
                     </div>
                     
-                    <div class="progress-bar">
-                        <div class="progress shimmer" id="aiProgress" style="width: 0%"></div>
+                    <div class="extracted-data" id="extractedData">
+                        <h4><i class="fas fa-list-alt"></i> Extracted Bill Data</h4>
+                        <div class="data-item">
+                            <div>
+                                <span>Supplier Name:</span>
+                                <div class="extraction-status success" id="supplierStatus">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Successfully extracted</span>
+                                </div>
+                                <div class="confidence-meter">
+                                    <div class="confidence-level" id="supplierConfidence" style="width: 92%"></div>
+                                </div>
+                                <div class="data-confidence">92% confidence</div>
+                            </div>
+                            <span id="supplierName">-</span>
+                        </div>
+                        <div class="data-item">
+                            <div>
+                                <span>Bill Date:</span>
+                                <div class="extraction-status success" id="dateStatus">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Successfully extracted</span>
+                                </div>
+                                <div class="confidence-meter">
+                                    <div class="confidence-level" id="dateConfidence" style="width: 95%"></div>
+                                </div>
+                                <div class="data-confidence">95% confidence</div>
+                            </div>
+                            <span id="billDate">-</span>
+                        </div>
+                        <div class="data-item">
+                            <div>
+                                <span>Total Amount:</span>
+                                <div class="extraction-status success" id="amountStatus">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Successfully extracted</span>
+                                </div>
+                                <div class="confidence-meter">
+                                    <div class="confidence-level" id="amountConfidence" style="width: 98%"></div>
+                                </div>
+                                <div class="data-confidence">98% confidence</div>
+                            </div>
+                            <span id="totalAmount">-</span>
+                        </div>
+                        <div class="data-item">
+                            <div>
+                                <span>GSTIN:</span>
+                                <div class="extraction-status success" id="gstinStatus">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Successfully extracted</span>
+                                </div>
+                                <div class="confidence-meter">
+                                    <div class="confidence-level" id="gstinConfidence" style="width: 90%"></div>
+                                </div>
+                                <div class="data-confidence">90% confidence</div>
+                            </div>
+                            <span id="gstin">-</span>
+                        </div>
+                        <div class="data-item">
+                            <div>
+                                <span>PO Number:</span>
+                                <div class="extraction-status warning" id="poStatus">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>Not found in document</span>
+                                </div>
+                                <div class="confidence-meter">
+                                    <div class="confidence-level" id="poConfidence" style="width: 0%"></div>
+                                </div>
+                                <div class="data-confidence">0% confidence</div>
+                            </div>
+                            <span id="poNumber">-</span>
+                        </div>
+                        <div class="data-item">
+                            <div>
+                                <span>Company Name:</span>
+                                <div class="extraction-status success" id="companyStatus">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span>Successfully extracted</span>
+                                </div>
+                                <div class="confidence-meter">
+                                    <div class="confidence-level" id="companyConfidence" style="width: 88%"></div>
+                                </div>
+                                <div class="data-confidence">88% confidence</div>
+                            </div>
+                            <span id="companyName">-</span>
+                        </div>
+                        
+                        <!-- Manual Verification Notice -->
+                        <div class="manual-verification-notice" id="manualVerificationNotice" style="display: none; margin-top: 20px; padding: 15px; background: rgba(255, 209, 102, 0.1); border-radius: 10px; border-left: 4px solid var(--warning);">
+                            <h4><i class="fas fa-exclamation-circle"></i> Manual Verification Required</h4>
+                            <p>This bill appears to be handwritten or unclear. Please review the extracted data carefully. Some fields may require manual verification.</p>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="extracted-data" id="extractedData">
-                    <h4><i class="fas fa-list-alt"></i> Extracted Bill Data</h4>
-                    <div id="dataContent"></div>
+                <div class="tab-content" id="preview-tab">
+                    <div class="bill-preview" id="billPreview">
+                        <i class="fas fa-file-image" style="font-size: 3rem; color: var(--primary); margin-bottom: 15px;"></i>
+                        <h4>Bill Preview</h4>
+                        <p>Upload a bill to see preview</p>
+                    </div>
                 </div>
+
+
                 
-                <button class="btn btn-secondary btn-block" id="validateBtn" disabled>
+                <button class="btn btn-block" id="validateBtn" style="display: none; margin-top: 25px;">
                     <i class="fas fa-check-circle"></i> Validate Bill
                 </button>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-clipboard-check"></i> Validation Results</h2>
                 
-                <div class="loader" id="loader">
-                    <div class="loader-spinner"></div>
-                    <p>Validating your bill with advanced AI...</p>
-                    <div class="progress-bar">
-                        <div class="progress shimmer" id="validationProgress" style="width: 0%"></div>
+                <div class="validation-result" id="validationResult">
+                    <div class="result-status" id="resultStatus">
+                        <i class="fas fa-check-circle"></i>
+                        <span id="statusText">Bill Validated Successfully!</span>
+                    </div>
+                    
+                    <div class="results-grid">
+                        <!-- Results will be dynamically populated -->
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 25px;">
+                        <button class="btn btn-secondary btn-block" id="downloadReportBtn">
+                            <i class="fas fa-download"></i> Download Report
+                        </button>
+                        <button class="btn btn-block" id="newBillBtn">
+                            <i class="fas fa-plus-circle"></i> Validate Another Bill
+                        </button>
                     </div>
                 </div>
-            </div>
-
-            <div class="card validation-result" id="validationResult">
-                <h2 class="card-title"><i class="fas fa-clipboard-check"></i> Validation Result</h2>
-                <div class="result-status" id="resultStatus"></div>
                 
-                <div class="result-details" id="resultDetails"></div>
-                
-                <div class="approval-info" id="approvalInfo"></div>
-                
-                <button class="btn btn-block" id="newBillBtn">
-                    <i class="fas fa-plus-circle"></i> Validate Another Bill
-                </button>
+                <div id="emptyState" style="text-align: center; padding: 40px 20px;">
+                    <i class="fas fa-file-invoice-dollar" style="font-size: 4rem; color: var(--primary-light); margin-bottom: 20px;"></i>
+                    <h3>No Bill Validated Yet</h3>
+                    <p>Upload a bill to start the validation process</p>
+                </div>
             </div>
         </div>
 
+        <div class="feature-highlights">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="feature-content">
+                    <h4>AI-Powered Validation</h4>
+                    <p>Uses Gemini AI for accurate data extraction and validation</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="feature-content">
+                    <h4>Fast Processing</h4>
+                    <p>Validates bills in seconds with advanced OCR technology</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="feature-content">
+                    <h4>Policy Compliance</h4>
+                    <p>Ensures all bills comply with company policies and regulations</p>
+                </div>
+            </div>
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="feature-content">
+                    <h4>Approval Workflow</h4>
+                    <p>Automatically determines required approvals based on amount</p>
+                </div>
+            </div>
+        </div>
+        
         <footer>
-            <p>MPBV-Bot v3.0 | Advanced AI-Powered Bill Validation with Gemini AI</p>
             <p>Made by Satyajit</p>
         </footer>
     </div>
 
+    <!-- Floating Action Button -->
+    <div class="floating-action" id="helpBtn">
+        <i class="fas fa-question"></i>
+    </div>
+
+    <!-- Notification -->
     <div class="notification" id="notification">
         <i class="fas fa-check-circle"></i>
         <div>
-            <strong>Bill uploaded successfully!</strong>
-            <p>Ready for validation</p>
+            <h4>Bill Uploaded Successfully!</h4>
+            <p>Your bill is ready for validation.</p>
         </div>
-    </div>
-
-    <div class="floating-action" id="helpBtn">
-        <i class="fas fa-question"></i>
     </div>
 
     <script src="script.js"></script>
